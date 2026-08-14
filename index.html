@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxima — the closest you'll ever get to your star</title>
+
+    <!-- =====================================================================
+      CONFIG -- fill these in once you have your Supabase + Stripe accounts.
+      See SETUP.md for exactly where to find each value.
+    ====================================================================== -->
+    <script>
+      window.PX_CONFIG = {
+        SUPABASE_URL: "https://mwbpbvjdjkcknmzjjrww.supabase.co",       // Project Settings -> API -> Project URL
+        SUPABASE_ANON_KEY: "sb_publishable_Jbe3pHXaVHZ4fcaA421DdA_KOB8UlvF", // Project Settings -> API -> Publishable key
+        STRIPE_PUBLISHABLE_KEY: "pk_test_51U46UmHcxlEdtTIvxWbk0Sw8U9WIyAjlO3bT0kfTvmGVBgkU521jHWMORObkgtmBHrgcR12kIazfT18DLwo6tvqF00Leg5o9kH", // Stripe -> Developers -> API keys
+      };
+    </script>
+
+    <!-- Supabase client (database) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Stripe client (card tokenization -- never touches your server with raw card numbers) -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      window.pxSupabase = window.supabase.createClient(
+        window.PX_CONFIG.SUPABASE_URL,
+        window.PX_CONFIG.SUPABASE_ANON_KEY
+      );
+      window.pxStripe = window.Stripe(window.PX_CONFIG.STRIPE_PUBLISHABLE_KEY);
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./assets/app.js"></script>
+    <!-- Additive widget — does not modify app.js or any existing design/component -->
+    <script src="./assets/escrow-widget.js"></script>
+    <!-- Additive widget — auction insights/analytics, also additive-only -->
+    <script src="./assets/analytics-widget.js"></script>
+    <!-- Additive widget — full platform lifecycle simulation (demo only, no real calls) -->
+    <script src="./assets/platform-simulation-widget.js"></script>
+  </body>
+</html>
