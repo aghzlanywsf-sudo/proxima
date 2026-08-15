@@ -154,7 +154,7 @@
   const $ = (sel) => root.querySelector(sel);
   const overlay = $("#px-an-overlay");
 
-  $("#px-an-fab").addEventListener("click", () => { openModal(); render("top10"); setActiveTab("top10"); });
+  $("#px-an-fab").addEventListener("click", () => { loadRealBids();openModal(); render("top10"); setActiveTab("top10"); });
   $("#px-an-close").addEventListener("click", closeModal);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
   root.querySelectorAll(".px-an-tab").forEach((tab) => {
