@@ -266,4 +266,65 @@
     };
     return map[msg] || msg;
   }
+    // 7) مزامنة زر "Log in" في الشريط العلوي مع حالة الجلسة الحقيقية
+  function findTopLoginButton() {
+    const header = document.querySelector('header');
+    if (!header) return null;
+    const buttons = header.querySelectorAll('button');
+    for (const b of buttons) {
+      const text = (b.textContent || '').trim();
+      if ((text === 'Log in' || text === 'Log out') && !b.className.includes('w-full')) {
+        return b;
+      }
+    }
+    return null;
+  }
+
+  let isLoggedIn = false;
+
+  function applyButtonState(btn) {
+    if (!btn) return;
+    if (isLoggedIn) {
+      btn.textContent = 'Log out';
+    } else {
+      btn.textContent = 'Log in';
+    }
+  }
+
+  async function syncLoginButton() {
+    const { data } = await window.pxSupabase.auth.getSession();
+    isLoggedIn = !!(data && data.session);
+    applyButtonState(findTopLoginButton());
+  }
+
+  // اعتراض الضغط على زر الشريط العلوي عندما تكون هناك جلسة نشطة فقط
+  document.addEventListener('click', async function (e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn !== findTopLoginButton()) return;
+    if (!isLoggedIn) return; // اترك React يفتح النافذة كالمعتاد
+
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    await window.pxSupabase.auth.signOut();
+    window.location.reload();
+  }, true);
+
+  // إعادة تطبيق حالة الزر إذا أعاد React رسمه
+  const headerObserver = new MutationObserver(function () {
+    applyButtonState(findTopLoginButton());
+  });
+  const headerEl = document.querySelector('header');
+  if (headerEl) {
+    headerObserver.observe(headerEl, { childList: true, subtree: true, characterData: true });
+  }
+
+  // تشغيل المزامنة عند تحميل الصفحة
+  syncLoginButton();
+
+  // إعادة المزامنة عند أي تغيّر في حالة تسجيل الدخول
+  window.pxSupabase.auth.onAuthStateChange(function () {
+    syncLoginButton();
+  });
 })();
