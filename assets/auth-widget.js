@@ -289,8 +289,6 @@
         }
       }
 
-  }
-
   async function syncLoginButton() {
     const { data } = await window.pxSupabase.auth.getSession();
     isLoggedIn = !!(data && data.session);
