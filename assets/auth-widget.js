@@ -281,14 +281,14 @@
   }
 
   let isLoggedIn = false;
+      function applyButtonState(btn) {
+        if (!btn) return;
+        const desired = isLoggedIn ? 'Log out' : 'Log in';
+        if (btn.textContent.trim() !== desired) {
+          btn.textContent = desired;
+        }
+      }
 
-  function applyButtonState(btn) {
-    if (!btn) return;
-    if (isLoggedIn) {
-      btn.textContent = 'Log out';
-    } else {
-      btn.textContent = 'Log in';
-    }
   }
 
   async function syncLoginButton() {
