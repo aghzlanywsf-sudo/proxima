@@ -116,11 +116,66 @@
       }, 1500);
     }
 
-    showMessage(
-      btn,
-      'تم إنشاء الحساب! يرجى تأكيد بريدك الإلكتروني من الرسالة المرسلة إليك، ثم تسجيل الدخول.',
-      false
-    );
+    showSignupCodeForm(btn, capturedEmail);
+  }
+
+  function showSignupCodeForm(btn, email) {
+    const old = btn.nextElementSibling;
+    if (old && old.dataset && old.dataset.pxAuthMsg === 'true') {
+      old.remove();
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.dataset.pxAuthMsg = 'true';
+    wrapper.style.cssText = 'margin-top:12px;text-align:center;';
+    wrapper.innerHTML =
+      '<div style="font-size:13px;color:#16a34a;margin-bottom:8px;">' +
+        'تم إنشاء الحساب! أدخل الرمز المرسَل إلى بريدك الإلكتروني:' +
+      '</div>' +
+      '<input id="pxOtpInput" type="text" maxlength="6" placeholder="------" ' +
+        'style="width:140px;text-align:center;letter-spacing:6px;font-size:18px;' +
+        'padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);' +
+        'background:#241b2c;color:#fff;" />' +
+      '<div>' +
+        '<button id="pxVerifyOtpBtn" style="margin-top:10px;padding:8px 20px;border-radius:9999px;' +
+        'border:none;background:var(--gold-soft,#e8c07d);color:var(--stage,#1a1420);' +
+        'font-weight:700;font-size:13px;cursor:pointer;">تأكيد الرمز</button>' +
+      '</div>' +
+      '<div id="pxOtpMsg" style="margin-top:8px;font-size:13px;"></div>';
+
+    btn.insertAdjacentElement('afterend', wrapper);
+
+    document.getElementById('pxVerifyOtpBtn').addEventListener('click', async function () {
+      const otpMsg = document.getElementById('pxOtpMsg');
+      const code = document.getElementById('pxOtpInput').value.trim();
+
+      if (!code || code.length < 6) {
+        otpMsg.style.color = '#dc2626';
+        otpMsg.textContent = 'يرجى إدخال الرمز المكوَّن من 6 أرقام.';
+        return;
+      }
+
+      otpMsg.style.color = '#16a34a';
+      otpMsg.textContent = 'جارٍ التحقق...';
+
+      const { error } = await window.pxSupabase.auth.verifyOtp({
+        email: email,
+        token: code,
+        type: 'signup',
+      });
+
+      if (error) {
+        otpMsg.style.color = '#dc2626';
+        otpMsg.textContent = translateError(error.message);
+        return;
+      }
+
+      otpMsg.style.color = '#16a34a';
+      otpMsg.textContent = 'تم التأكيد بنجاح! جارٍ إعادة تحميل الصفحة...';
+      setTimeout(function () {
+        window.location.reload();
+      }, 1200);
+    });
   }
 
   // 6) ترجمة رسائل الخطأ الشائعة
