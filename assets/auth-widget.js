@@ -132,8 +132,8 @@
       '<div style="font-size:13px;color:#16a34a;margin-bottom:8px;">' +
         'تم إنشاء الحساب! أدخل الرمز المرسَل إلى بريدك الإلكتروني:' +
       '</div>' +
-               '<input id="pxOtpInput" type="text" maxlength="6" inputmode="numeric" placeholder="------" ' +
-            'style="width:90%;max-width:180px;box-sizing:border-box;text-align:center;letter-spacing:4px;font-size:16px;' +
+                   '<input id="pxOtpInput" type="text" maxlength="6" inputmode="numeric" placeholder="------" ' +
+            'style="width:8ch;max-width:100%;box-sizing:content-box;text-align:center;letter-spacing:3px;font-size:15px;' +
         'padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);' +
         'background:#241b2c;color:#fff;" />' +
       '<div>' +
