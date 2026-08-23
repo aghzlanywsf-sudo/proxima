@@ -41,6 +41,14 @@
     const text = (btn.textContent || '').trim();
     const classes = btn.className || '';
 
+    
+    // 1.5) التقاط اختيار نوع الحساب (Fan / Star) فور الضغط عليه في الخطوة الأولى
+    if (text === 'Fan') {
+      capturedAccountType = 'fan';
+    } else if (text === 'Star account') {
+      capturedAccountType = 'star';
+    }      
+
     // زر "Log in" داخل الفورم فقط (يحتوي w-full في صنفه)
     if (text === 'Log in' && classes.includes('w-full')) {
       e.preventDefault();
@@ -56,7 +64,6 @@
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-            capturedAccountType = getSelectedAccountType();
       handleSignup(btn);
       return;
     }
