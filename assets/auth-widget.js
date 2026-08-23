@@ -5,7 +5,19 @@
 (function () {
   let capturedEmail = '';
   let capturedPassword = '';
-  let capturedName = '';
+      let capturedName = '';
+    let capturedAccountType = 'fan';
+
+      function getSelectedAccountType() {
+      const buttons = document.querySelectorAll('button');
+      for (const b of buttons) {
+        const text = (b.textContent || '').trim();
+        if (text === 'Star account' && b.style && b.style.background) {
+          return 'star';
+        }
+      }
+      return 'fan';
+    }
 
   // 1) التقاط قيم الحقول أثناء الكتابة
   document.addEventListener('input', function (e) {
@@ -44,6 +56,7 @@
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
+            capturedAccountType = getSelectedAccountType();
       handleSignup(btn);
       return;
     }
@@ -106,15 +119,18 @@
       return;
     }
 
-    const userId = data && data.user ? data.user.id : null;
-    if (userId && capturedName) {
-      setTimeout(async function () {
-        await window.pxSupabase
-          .from('profiles')
-          .update({ display_name: capturedName })
-          .eq('id', userId);
-      }, 1500);
-    }
+         const userId = data && data.user ? data.user.id : null;
+      if (userId) {
+        setTimeout(async function () {
+          await window.pxSupabase
+            .from('profiles')
+            .update({
+              display_name: capturedName || null,
+              account_type: capturedAccountType,
+            })
+            .eq('id', userId);
+        }, 1500);
+      }
 
     showSignupCodeForm(btn, capturedEmail);
   }
