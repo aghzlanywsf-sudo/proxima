@@ -12,7 +12,8 @@
     const buttons = header.querySelectorAll('button');
     for (const b of buttons) {
       const text = (b.textContent || '').trim();
-      if (text === 'Log in' || text === 'Log out') return b;
+      const title = (b.getAttribute('title') || '').trim();
+      if (text === 'Log in' || text === 'Log out' || title === 'Log out') return b;
     }
     return null;
   }
